@@ -15,8 +15,7 @@ This is a dynamic application for advertising businesses that provides full CRUD
 * Login limiter for 3 failure tries , blocking for the next 24 hours
 
 ---
-
-##Technologies Used
+## Technologies Used
 
 * React: A JavaScript library for building user interfaces - Using TypeScript template.
 * Material-UI: A popular React UI framework that provides pre-designed components and styling.
