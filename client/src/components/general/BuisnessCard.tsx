@@ -30,6 +30,7 @@ interface Props extends Bcard {
   onToggleFavorit: Function;
   favoritePage: boolean;
   index: number;
+  alt?: string;
 }
 
 function BuisnessCard({
@@ -43,6 +44,7 @@ function BuisnessCard({
   onToggleFavorit,
   favoritePage,
   favorites,
+  alt,
 }: Props) {
   const { userData } = React.useContext(UserContext);
   const [open, setOpen] = React.useState(false);
@@ -125,14 +127,18 @@ function BuisnessCard({
         <CardMedia
           component="img"
           height="194"
-          image={image ? image : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"}
-          alt=""
+          image={
+            image && image.startsWith("https")
+              ? image
+              : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+          }
+          alt={alt ? alt : "buisness interview picture"}
           sx={{ cursor: "pointer" }}
           onClick={() => {
             navigate(`view-card/${_id}`);
           }}
         />
-        <CardContent>
+        <CardContent sx={{ minHeight: "90px" }}>
           <Typography variant="body2" color="text.secondary">
             {subTitle}
           </Typography>
