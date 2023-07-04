@@ -108,7 +108,6 @@ function App() {
             </Routes>
           </Container>
         </Container>
-        {/* </div> */}
         <Footer />
       </AppThemeProvider>
     </>
