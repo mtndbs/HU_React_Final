@@ -1,6 +1,6 @@
 # HU_React_Final
 
-# Dynamic Advertising Application
+# Dynamic Advertising Buisness Application
 This is a dynamic application for advertising businesses that provides full CRUD functionality and a RESTful API. It is built using React TypeScript Template  with Material-UI for the frontend, Node.js with Express for the backend, and MongoDB as the database.
  
 
