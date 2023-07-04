@@ -26,9 +26,9 @@ This is a dynamic application for advertising businesses that provides full CRUD
 ## Prerequisites
 Before running the application, make sure you have the following installed:
 
-Node.js: Download and install Node.js
-MongoDB: Install MongoDB
-Installation
+- Node.js: Download and install Node.js
+- MongoDB: Install MongoDB
+- Installation
 Clone the repository:
 Install the dependencies:
 npm install at Both Client and Server Side
