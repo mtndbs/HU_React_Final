@@ -30,12 +30,12 @@ Before running the application, make sure you have the following installed:
 - MongoDB: Install MongoDB
 - Installation
 - Clone the repository:
--- Install the dependencies:
+- Install the dependencies:
 - npm install at Both Client and Server Side
 - Server port at 7800
 - React development port at 3000
-Start the development server at Server directory:  npm start
-Open your browser and visit http://localhost:3000 to access the application.
+- Start the development server at Server directory:  npm start
+- Open your browser and visit http://localhost:3000 to access the application.
 
 Features 
 
