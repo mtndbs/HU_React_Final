@@ -2,18 +2,18 @@
 
 # Dynamic Advertising Application
 This is a dynamic application for advertising businesses that provides full CRUD functionality and a RESTful API. It is built using React TypeScript Template  with Material-UI for the frontend, Node.js with Express for the backend, and MongoDB as the database.
---- 
+ 
 
 ## Features
-*** Create, read, update, and delete (CRUD) operations for managing advertisements
-*** RESTful API for accessing and manipulating advertisement data
-*** User-friendly interface with a modern and responsive design
-*** Integration with MongoDB for data storage
-*** Multy-users Like/unlike  abilities
-*** BackEnd and FrontEnd RouteGuard , Adapted to three types of users : User , Buisness , Admin
-*** Admin Area with users console
-*** Login limiter for 3 failure tries , blocking for the next 24 hours
----
+* Create, read, update, and delete (CRUD) operations for managing advertisements
+* RESTful API for accessing and manipulating advertisement data
+*  User-friendly interface with a modern and responsive design
+* Integration with MongoDB for data storage
+* Multy-users Like/unlike  abilities
+* BackEnd and FrontEnd RouteGuard , Adapted to three types of users : User , Buisness , Admin
+* Admin Area with users console
+* Login limiter for 3 failure tries , blocking for the next 24 hours
+
 
 ##Technologies Used
 
