@@ -14,14 +14,15 @@ This is a dynamic application for advertising businesses that provides full CRUD
 * Admin Area with users console
 * Login limiter for 3 failure tries , blocking for the next 24 hours
 
+---
 
 ##Technologies Used
 
-*** React: A JavaScript library for building user interfaces - Using TypeScript template.
-*** Material-UI: A popular React UI framework that provides pre-designed components and styling.
-*** Node.js: A runtime environment for executing JavaScript code on the server-side.
-*** Express: A minimalist web application framework for Node.js.
-*** MongoDB: A document-oriented NoSQL database for storing application data.
+* React: A JavaScript library for building user interfaces - Using TypeScript template.
+* Material-UI: A popular React UI framework that provides pre-designed components and styling.
+* Node.js: A runtime environment for executing JavaScript code on the server-side.
+* Express: A minimalist web application framework for Node.js.
+* MongoDB: A document-oriented NoSQL database for storing application data.
 
 ## Prerequisites
 Before running the application, make sure you have the following installed:
