@@ -49,7 +49,12 @@ exports.protector = async (req, res, next) => {
     // sending the user details inside the req object to the endpoint
     //check if user still exists
     const currentUser = await User.findById(decoded.id);
+    // reseting the login blocked by protect middleware
     req.user = currentUser;
+    if (currentUser.loginTrys > 0) {
+      currentUser.loginTrys = 0;
+      currentUser.save();
+    }
 
     if (!currentUser) {
       return res.status(401).json({

@@ -127,19 +127,6 @@ userSchema.pre('save', function(next) {
   next();
 });
 
-// userSchema.methods.userBlockedStamp = function() {
-//   if (this.loginTrys < 3 || this.loginTrys === null) {
-//     this.loginTrys += 1;
-//     return true;
-//   }
-//   this.userBlocked = true;
-//   this.userBlockedAt = Date.now();
-//   return false;
-// };
-//   // False means did not pass one day
-//   return false;
-// };
-
 userSchema.methods.createPasswordResetToken = function() {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
