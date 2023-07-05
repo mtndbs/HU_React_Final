@@ -7,7 +7,7 @@ This is a dynamic application for advertising businesses that provides full CRUD
 ## Features
 * Create, read, update, and delete (CRUD) operations for managing advertisements
 * RESTful API for accessing and manipulating advertisement data
-*  User-friendly interface with a modern and responsive design
+*  User-friendly interface with a modern and responsive design by MUI componenets
 * Integration with MongoDB for data storage
 * Multy-users Favorite and my cards abilities
 * BackEnd and FrontEnd RouteGuard , Adapted to three types of users : User , Buisness , Admin
@@ -22,6 +22,13 @@ This is a dynamic application for advertising businesses that provides full CRUD
 * Node.js: A runtime environment for executing JavaScript code on the server-side.
 * Express: A minimalist web application framework for Node.js.
 * MongoDB: A document-oriented NoSQL database for storing application data.
+
+## Project Restrictions: (As of the time of writing) 
+- Phone validator , validate only Israely phone number
+- Running the server provides hardcoded buisnesses to the database , reprovide only when then array is empty.
+- Buisness user cannot provide by him self latitude and longtitude for the buisness.
+- User will be blocked for 24 hours reference to the email and not the api, only when login fails 3 times in succession.
+   
 
 ## Prerequisites
 Before running the application, make sure you have the following installed:
