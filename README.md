@@ -38,7 +38,7 @@ Before running the application, make sure you have the following installed:
 - Installation:
   - 1 Clone the repository:
   - 2 Install the dependencies:
-  - run: npm Install at both Client and Server directories
+- run: npm Install at both Client and Server directories
     - Server port at 7800
     - React development port at 3000
 - Start the development server at Server directory:  npm start.
