@@ -37,10 +37,9 @@ Before running the application, make sure you have the following installed:
 - Start the development server at Server directory:  npm start
 - Open your browser and visit http://localhost:3000 to access the application.
 
-Features 
 
 License
 This project is licensed under the MIT License. See the LICENSE file for more details.
 
 Contact
-If you have any questions or suggestions, feel free to contact the project maintainer at your-email@example.com.
+If you have any questions or suggestions, feel free to contact the project maintainer at mtndbs@gmail.com .
