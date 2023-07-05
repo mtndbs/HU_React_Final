@@ -34,8 +34,8 @@ Before running the application, make sure you have the following installed:
   - run: npm Install at both Client and Server directories
     - Server port at 7800
     - React development port at 3000
-3 Start the development server at Server directory:  npm start
-4 Open your browser and visit http://localhost:3000 to access the application.
+3 Start the development server at Server directory:  npm start.
+- Open your browser and visit http://localhost:3000 to access the application.
 
 
 License
