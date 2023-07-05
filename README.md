@@ -9,9 +9,9 @@ This is a dynamic application for advertising businesses that provides full CRUD
 * RESTful API for accessing and manipulating advertisement data
 *  User-friendly interface with a modern and responsive design
 * Integration with MongoDB for data storage
-* Multy-users Like/unlike  abilities
+* Multy-users Favorite and my cards abilities
 * BackEnd and FrontEnd RouteGuard , Adapted to three types of users : User , Buisness , Admin
-* Admin Area with users console
+* Admin Area with users console 
 * Login limiter for 3 failure tries , blocking for the next 24 hours
 
 ---
@@ -31,7 +31,7 @@ Before running the application, make sure you have the following installed:
 - Installation
 - Clone the repository:
 - Install the dependencies:
-- npm install at Both Client and Server Side
+- npm Install at both Client and Server directories
 - Server port at 7800
 - React development port at 3000
 - Start the development server at Server directory:  npm start
