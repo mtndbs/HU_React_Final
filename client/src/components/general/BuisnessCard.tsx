@@ -29,6 +29,7 @@ interface Props extends Bcard {
   onDelete: Function;
   onToggleFavorit: Function;
   favoritePage: boolean;
+  rootLink?: boolean;
   index: number;
   alt?: string;
 }
@@ -45,6 +46,7 @@ function BuisnessCard({
   favoritePage,
   favorites,
   alt,
+  rootLink = false,
 }: Props) {
   const { userData } = React.useContext(UserContext);
   const [open, setOpen] = React.useState(false);
@@ -135,7 +137,7 @@ function BuisnessCard({
           alt={alt ? alt : "buisness interview picture"}
           sx={{ cursor: "pointer" }}
           onClick={() => {
-            navigate(`view-card/${_id}`);
+            navigate(!rootLink ? `view-card/${_id}` : `/view-card/${_id}`);
           }}
         />
         <CardContent sx={{ minHeight: "90px" }}>
@@ -170,7 +172,7 @@ function BuisnessCard({
               <IconButton
                 aria-label="edit"
                 onClick={() => {
-                  navigate(`edit-card/${_id}`);
+                  navigate(!rootLink ? `view-card/${_id}` : `/view-card/${_id}`);
                 }}
               >
                 <ModeEditIcon />

@@ -81,6 +81,7 @@ function MyCardsPage() {
                       onDelete={onDelete}
                       onToggleFavorit={onToggleFavorit}
                       favoritePage={false}
+                      rootLink={true}
                       index={index}
                     />
                   )}
