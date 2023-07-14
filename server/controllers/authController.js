@@ -51,8 +51,10 @@ exports.protector = async (req, res, next) => {
     const currentUser = await User.findById(decoded.id);
     // reseting the login blocked by protect middleware
     req.user = currentUser;
+    console.log(currentUser);
     if (currentUser.loginTrys > 0) {
       currentUser.loginTrys = 0;
+      console.log(currentUser.loginTrys);
       currentUser.save();
     }
 
@@ -176,10 +178,14 @@ exports.logIn = async (req, res) => {
     }
     user.save();
 
+    const loginAttemps = 3 - user.loginTrys;
     if (!(await bcrypt.compare(password, user.password))) {
-      return res
-        .status(400)
-        .json({ status: 'fail', message: 'email or passwrod are invalid' });
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Email or passwrod are invalid',
+        trys: user.loginTrys,
+        tryMessage: `Wrong username and password, you only have ${loginAttemps} more login attempts left`
+      });
     }
 
     const token = signToken(user._id, user.bizChecked);

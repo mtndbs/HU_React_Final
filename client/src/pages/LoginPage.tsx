@@ -60,7 +60,7 @@ function LoginPage() {
       setLoading(false);
     }, 1200);
     return () => clearTimeout(timer);
-  });
+  }, []);
 
   const setEmailCorrect = (bool: boolean) => {
     if (bool) {
@@ -104,18 +104,26 @@ function LoginPage() {
   };
 
   const handleClick = () => {
+    setLoadCircle(true);
     if (!validate()) {
       toast.error("Please enter the details correctly ");
       validateButtonCheck();
+      setLoadCircle(false);
       return;
     }
     login({ email, password })
       .then((json) => {
         if (json && json.status === "fail") {
+          console.log(json);
           setLoadCircle(false);
           setPasswordCorrect(false);
           setEmailCorrect(false);
-          toast.error(json.message, { hideProgressBar: true });
+          if (json && json.trys) {
+            toast.error(json.tryMessage, { hideProgressBar: true, autoClose: false });
+          } else {
+            toast.error(json.message, { hideProgressBar: true });
+          }
+
           return;
         }
         if (json.token) {

@@ -13,9 +13,11 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { isValidIsraeliPhoneNumber } from "../hooks/helpFunctions";
 import { countryList } from "../pages/signUpPage/allCountries";
 import { addCard, getCardById } from "../services/ApiService";
+import PageCircle from "../components/general/PageCircle";
 
 function EditCardPage() {
   // generic
+  const [loading, setLoading] = React.useState(true);
   const [loadCircle, setLoadCircle] = React.useState(false);
   const addSxStyle = sxStyles();
   const navigate = useNavigate();
@@ -78,6 +80,14 @@ function EditCardPage() {
   const [zip, setZip] = React.useState("");
 
   // ====== use effect =========
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   React.useEffect(() => {
     if (!id) return;
     getCardById(id).then((response) => {
@@ -259,133 +269,137 @@ function EditCardPage() {
         justifyContent: "center",
       }}
     >
-      <Box onKeyUp={() => validate()} component="form" sx={{ ...addSxStyle }}>
-        <Title mainText={"Edit Card"} subText="Edit your card" />
-        <Box display={"flex"} className="myBox">
-          <TextField
-            autoFocus={true}
-            label={titleLabel}
-            variant="outlined"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            error={fieldTitleErr}
-            helperText={titleErr}
-          />
+      {loading ? (
+        <PageCircle />
+      ) : (
+        <Box onKeyUp={() => validate()} component="form" sx={{ ...addSxStyle }}>
+          <Title mainText={"Edit Card"} subText="Edit your card" />
+          <Box display={"flex"} className="myBox">
+            <TextField
+              autoFocus={true}
+              label={titleLabel}
+              variant="outlined"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              error={fieldTitleErr}
+              helperText={titleErr}
+            />
 
-          <TextField
-            label={subTitleLabel}
-            variant="outlined"
-            value={subTitle}
-            onChange={(e) => setSubTitle(e.target.value)}
-            error={fieldSubTitleErr}
-            helperText={subTitleErr}
-          />
-        </Box>
+            <TextField
+              label={subTitleLabel}
+              variant="outlined"
+              value={subTitle}
+              onChange={(e) => setSubTitle(e.target.value)}
+              error={fieldSubTitleErr}
+              helperText={subTitleErr}
+            />
+          </Box>
 
-        <Box display={"flex"} className="myBox">
-          <TextField
-            label={phoneLabel}
-            variant="outlined"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            error={fieldPhoneErr}
-            helperText={phoneErr}
-          />
+          <Box display={"flex"} className="myBox">
+            <TextField
+              label={phoneLabel}
+              variant="outlined"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              error={fieldPhoneErr}
+              helperText={phoneErr}
+            />
 
-          <TextField
-            label={emailLabel}
-            variant="outlined"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={fieldEmailErr}
-            helperText={emailErr}
-          />
-        </Box>
-        <Box display={"flex"} className="myBox">
-          <TextField
-            label={descriptionLabel}
-            variant="outlined"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            error={fieldDescriptionErr}
-            helperText={descriptionErr}
-          />
+            <TextField
+              label={emailLabel}
+              variant="outlined"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={fieldEmailErr}
+              helperText={emailErr}
+            />
+          </Box>
+          <Box display={"flex"} className="myBox">
+            <TextField
+              label={descriptionLabel}
+              variant="outlined"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              error={fieldDescriptionErr}
+              helperText={descriptionErr}
+            />
 
-          <TextField
-            label={webLabel}
-            variant="outlined"
-            value={web}
-            onChange={(e) => setweb(e.target.value)}
-            error={fieldwebErr}
-            helperText={webErr}
-          />
-        </Box>
-        <Box display={"flex"} className="myBox">
-          <TextField label={"Image"} variant="outlined" value={image} onChange={(e) => setImage(e.target.value)} />
+            <TextField
+              label={webLabel}
+              variant="outlined"
+              value={web}
+              onChange={(e) => setweb(e.target.value)}
+              error={fieldwebErr}
+              helperText={webErr}
+            />
+          </Box>
+          <Box display={"flex"} className="myBox">
+            <TextField label={"Image"} variant="outlined" value={image} onChange={(e) => setImage(e.target.value)} />
 
-          <Autocomplete
-            disablePortal
-            value={countrySelect}
-            options={countryList}
-            inputValue={country}
-            onInputChange={(event, newInputValue) => {
-              setCountry(newInputValue);
-            }}
-            sx={{ width: 620 }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label={countryLabel}
-                variant="outlined"
-                value={country}
-                error={fieldCountryErr}
-                helperText={countryErr}
-              />
-            )}
-          />
-        </Box>
-        <Box display={"flex"} className="myBox">
-          <TextField
-            label={cityLabel}
-            variant="outlined"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            error={fieldCityErr}
-            helperText={cityErr}
-          />
+            <Autocomplete
+              disablePortal
+              value={countrySelect}
+              options={countryList}
+              inputValue={country}
+              onInputChange={(event, newInputValue) => {
+                setCountry(newInputValue);
+              }}
+              sx={{ width: 620 }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={countryLabel}
+                  variant="outlined"
+                  value={country}
+                  error={fieldCountryErr}
+                  helperText={countryErr}
+                />
+              )}
+            />
+          </Box>
+          <Box display={"flex"} className="myBox">
+            <TextField
+              label={cityLabel}
+              variant="outlined"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              error={fieldCityErr}
+              helperText={cityErr}
+            />
 
-          <TextField
-            label={streetLabel}
-            variant="outlined"
-            value={street}
-            onChange={(e) => setStreet(e.target.value)}
-            error={fieldStreetErr}
-            helperText={streetErr}
-          />
-        </Box>
-        <Box display={"flex"} className="myBox">
-          <TextField
-            label={"House number"}
-            variant="outlined"
-            value={houseNumber}
-            onChange={(e) => setHouseNumber(e.target.value)}
-          />
-          <TextField label={"Zip"} variant="outlined" value={zip} onChange={(e) => setZip(e.target.value)} />
-        </Box>
+            <TextField
+              label={streetLabel}
+              variant="outlined"
+              value={street}
+              onChange={(e) => setStreet(e.target.value)}
+              error={fieldStreetErr}
+              helperText={streetErr}
+            />
+          </Box>
+          <Box display={"flex"} className="myBox">
+            <TextField
+              label={"House number"}
+              variant="outlined"
+              value={houseNumber}
+              onChange={(e) => setHouseNumber(e.target.value)}
+            />
+            <TextField label={"Zip"} variant="outlined" value={zip} onChange={(e) => setZip(e.target.value)} />
+          </Box>
 
-        <Box>
-          <Button sx={{ width: "50%" }}>Cancel</Button>
-          <Button
-            onClick={() => {
-              clearAllFieldsFunc();
-            }}
-            sx={{ width: "50%" }}
-          >
-            <AutorenewIcon />
-          </Button>
+          <Box>
+            <Button sx={{ width: "50%" }}>Cancel</Button>
+            <Button
+              onClick={() => {
+                clearAllFieldsFunc();
+              }}
+              sx={{ width: "50%" }}
+            >
+              <AutorenewIcon />
+            </Button>
+          </Box>
+          <AuthButton handleClick={() => handleClick}>Submit {loadCircle && <Circle _size={30} />} </AuthButton>
         </Box>
-        <AuthButton handleClick={() => handleClick}>Submit {loadCircle && <Circle _size={30} />} </AuthButton>
-      </Box>
+      )}
     </Container>
   );
 }

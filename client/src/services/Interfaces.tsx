@@ -26,6 +26,8 @@ export interface Bcard {
 }
 
 export interface User {
+  tryMessage?: string | null;
+  trys?: number | null;
   _id?: string | null;
   name?: string | null;
   lastName?: string | null;

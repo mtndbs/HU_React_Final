@@ -172,7 +172,7 @@ function BuisnessCard({
               <IconButton
                 aria-label="edit"
                 onClick={() => {
-                  navigate(!rootLink ? `view-card/${_id}` : `/view-card/${_id}`);
+                  navigate(!rootLink ? `edit-card/${_id}` : `/edit-card/${_id}`);
                 }}
               >
                 <ModeEditIcon />
