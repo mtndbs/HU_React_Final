@@ -10,8 +10,10 @@ export const isValidIsraeliPhoneNumber = (phoneNumber: string): boolean => {
 };
 
 export const titleCase = (title: string) => {
-  return title
-    .split(" ")
-    .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
-    .join(" ");
+  if (title) {
+    return title
+      .split(" ")
+      .map((word) => (word && word[0] ? word[0].toUpperCase() + word.slice(1).toLowerCase() : word))
+      .join(" ");
+  }
 };
