@@ -24,7 +24,7 @@ router.get('/my', authController.protector, cardController.getMyCards);
 router
   .route('/:id') //http://localhost:7800/api/cards/:id
   .get(cardController.getOneCard)
-  .put(authController.protector, cardController.upDateCard)
+  .patch(authController.protector, cardController.upDateCard)
   .delete(authController.protector, cardController.deleteCard);
 
 router.put('/:id/favorite', authController.protector, cardController.setFavorite);

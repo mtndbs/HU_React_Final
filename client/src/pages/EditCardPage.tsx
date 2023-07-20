@@ -12,7 +12,7 @@ import { sxStyles } from "../hooks/sxStyles";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import { isValidIsraeliPhoneNumber } from "../hooks/helpFunctions";
 import { countryList } from "../pages/signUpPage/allCountries";
-import { addCard, getCardById } from "../services/ApiService";
+import { addCard, editCard, getCardById } from "../services/ApiService";
 import PageCircle from "../components/general/PageCircle";
 
 function EditCardPage() {
@@ -251,8 +251,13 @@ function EditCardPage() {
 
     setLoadCircle(true);
 
-    addCard({ title, subTitle, description, phone, email, web, image, country, city, street, houseNumber, zip })
-      .then(() => {
+    editCard(id, { title, subTitle, description, phone, email, web, image, country, city, street, houseNumber, zip })
+      .then((json) => {
+        if (json && json.status === "fail") {
+          toast.error("Somthing went wrong with the edit");
+          return;
+        }
+
         setTimeout(() => {
           navigate("/");
         }, 2000);

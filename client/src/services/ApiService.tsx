@@ -57,7 +57,7 @@ export async function deleteCard(_id: string): Promise<any> {
   return res;
 }
 
-export async function editCard(_id: string, card: Bcard): Promise<Bcard> {
+export async function editCard(_id: string | undefined, card: Bcard): Promise<Bcard> {
   const res = await fetch(`${cardsUrl}${_id}`, {
     method: "PATCH",
     headers: {
