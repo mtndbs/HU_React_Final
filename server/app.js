@@ -34,6 +34,8 @@ app.use(xss());
 require('./utils/initailizeCards');
 // ================= Global middleWare =================
 
+// const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
 const cardRouter = require('./routes/bCardRoutes');
 
@@ -63,6 +65,11 @@ app.all('*', (req, res, next) => {
   });
   next();
 });
+// app.all('*', (req, res, next) => {
+//   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+// });
+
+app.use(globalErrorHandler);
 
 app.listen(port, () => {
   console.log(`you're listening to port ${port}`);
