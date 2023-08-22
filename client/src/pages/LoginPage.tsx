@@ -129,8 +129,8 @@ function LoginPage() {
         if (json.token) {
           setToken(json.token);
           setUser(json);
-          setloginMsg(`Welcome back ${json.name} ${json.lastName || ""} ! , logging in...`);
           setUserData(json);
+          setloginMsg(`Welcome back ${json.name} ${json.lastName || ""} ! , logging in...`);
         }
         setLoadCircle(true);
         setTimeout(() => {
