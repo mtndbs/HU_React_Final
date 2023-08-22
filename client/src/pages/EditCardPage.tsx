@@ -346,7 +346,8 @@ function EditCardPage() {
               value={countrySelect}
               options={countryList}
               inputValue={country}
-              onInputChange={(event, newInputValue) => {
+              freeSolo
+              onInputChange={(_, newInputValue) => {
                 setCountry(newInputValue);
               }}
               sx={{ width: 620 }}

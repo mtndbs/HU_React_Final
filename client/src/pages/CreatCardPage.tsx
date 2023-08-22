@@ -322,10 +322,11 @@ function CreatCardPage() {
 
           <Autocomplete
             disablePortal
+            freeSolo
             value={countrySelect}
             options={countryList}
             inputValue={country}
-            onInputChange={(event, newInputValue) => {
+            onInputChange={(_, newInputValue) => {
               setCountry(newInputValue);
             }}
             sx={{ width: 620 }}
