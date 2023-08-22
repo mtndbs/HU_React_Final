@@ -124,10 +124,22 @@ exports.signUp = async (req, res) => {
       zip,
       bizChecked
     });
+
+    const token = signToken(newUser._id, newUser.bizChecked);
+    if (!token) {
+      return res.status(401).json({
+        status: 'There was problem with your authentication, please sign again'
+      });
+    }
+
     res.status(200).json({
-      status: 'success',
-      data: _.pick(newUser, ['_id', 'name', 'email']),
-      message: 'user has been registered successfully'
+      name: newUser.name,
+      email: newUser.email,
+      bizChecked: newUser.bizChecked,
+      token: token,
+      favorites: newUser.favorites,
+      _id: newUser._id,
+      role: newUser.role
     });
   } catch (err) {
     res.status(401).json({
