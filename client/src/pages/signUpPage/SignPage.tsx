@@ -13,7 +13,7 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 // import "../signUpPage/signUp.css";
 import "../../App.css";
 
-import { isValidIsraeliPhoneNumber, isValidPassword } from "../../hooks/helpFunctions";
+import { inputProgress, isValidIsraeliPhoneNumber, isValidPassword } from "../../hooks/helpFunctions";
 import { countryList } from "./allCountries";
 import { signup } from "../../services/ApiService";
 import PageCircle from "../../components/general/PageCircle";
@@ -23,7 +23,7 @@ function SignPage() {
   // generic
   const [loading, setLoading] = React.useState(true);
   const [loginMsg, setloginMsg] = React.useState("");
-
+  const [progressTitle, setProgressTitle] = React.useState("");
   const { setUserData } = React.useContext(UserContext);
 
   const [loadCircle, setLoadCircle] = React.useState(false);
@@ -269,12 +269,12 @@ function SignPage() {
       .then((user) => {
         if (user && user.status === "fail") {
           toast.error(user.message);
+          setLoadCircle(false);
         } else {
           setToken(user.token);
           setUser(user);
           setUserData(user);
           setloginMsg(`Welcome ${user.name} ${user.lastName || ""}!, logging in...`);
-
           setTimeout(() => {
             navigate("/");
             setLoadCircle(false);
@@ -297,8 +297,32 @@ function SignPage() {
       {loading ? (
         <PageCircle />
       ) : (
-        <Box onKeyUp={() => validate()} component="form" sx={{ ...addSxStyle }}>
+        <Box
+          onKeyUp={() => validate()}
+          onChange={() => {
+            setProgressTitle(
+              inputProgress([
+                name,
+                lastName,
+                password,
+                phone,
+                email,
+                street,
+                confirmPassword,
+                image,
+                country,
+                city,
+                houseNumber,
+                zip,
+                bizChecked,
+              ])
+            );
+          }}
+          component="form"
+          sx={{ ...addSxStyle }}
+        >
           <Title mainText={"Sign up"} subText="Plase sign up" />
+          <p style={{ textAlign: "center", color: progressTitle.startsWith("Minute") ? "orange" : "green" }}>{progressTitle}</p>
           <Box display={"flex"} className="myBox">
             <TextField
               className="sign-field"
@@ -442,6 +466,7 @@ function SignPage() {
             <Button
               onClick={() => {
                 clearAllFieldsFunc();
+                setProgressTitle("");
               }}
               sx={{ width: "50%" }}
             >
