@@ -9,7 +9,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PreviewIcon from "@mui/icons-material/Preview";
 import CallIcon from "@mui/icons-material/Call";
 
 import { Bcard } from "../../services/Interfaces";
@@ -146,7 +145,7 @@ function BuisnessCard({
           </Typography>
         </CardContent>
 
-        {!favoritePage && (
+        {!favoritePage ? (
           <CardActions disableSpacing>
             {verifyToken() && (
               <IconButton
@@ -168,38 +167,46 @@ function BuisnessCard({
             >
               <CallIcon />
             </IconButton>
-            {verifyUiAdmin(userData!) || ifCardBelongToThisUserFunc(userData?._id) ? (
-              <IconButton
-                aria-label="edit"
-                onClick={() => {
-                  navigate(!rootLink ? `edit-card/${_id}` : `/edit-card/${_id}`);
-                }}
-              >
-                <ModeEditIcon />
-              </IconButton>
-            ) : (
-              <span></span>
-            )}
+            {verifyUiAdmin(userData!) ||
+              (ifCardBelongToThisUserFunc(userData?._id) && (
+                <IconButton
+                  aria-label="edit"
+                  onClick={() => {
+                    navigate(!rootLink ? `edit-card/${_id}` : `/edit-card/${_id}`);
+                  }}
+                >
+                  <ModeEditIcon />
+                </IconButton>
+              ))}
 
             <Box>
+              {verifyUiAdmin(userData!) ||
+                (ifCardBelongToThisUserFunc(userData?._id) && (
+                  <IconButton
+                    onClick={() => {
+                      handleClickOpen();
+                    }}
+                    aria-label="delete"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                ))}
+            </Box>
+          </CardActions>
+        ) : (
+          <CardActions disableSpacing>
+            {verifyToken() && (
               <IconButton
+                aria-label="add to favorites"
                 onClick={() => {
-                  navigate(`view-card/${_id}`);
+                  onToggleFavorit(_id);
+                  toggleHighlight();
+                  // toast.info(`${title} favorite status changed`);
                 }}
               >
-                <PreviewIcon />
+                <FavoriteIcon sx={{ color: isRedHeart ? "red" : "" }} />
               </IconButton>
-              {verifyUiAdmin(userData!) && (
-                <IconButton
-                  onClick={() => {
-                    handleClickOpen();
-                  }}
-                  aria-label="delete"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              )}
-            </Box>
+            )}
           </CardActions>
         )}
       </Card>

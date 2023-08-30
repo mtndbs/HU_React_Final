@@ -75,12 +75,12 @@ interface Props {
 export default function Header({ themeToggle }: Props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
-  // const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
   const mdAndUp = useMediaQuery(theme.breakpoints.up("md"));
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const { userData } = React.useContext(UserContext);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
   const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -95,8 +95,6 @@ export default function Header({ themeToggle }: Props) {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-
-  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -136,6 +134,7 @@ export default function Header({ themeToggle }: Props) {
         : [
             { link: "/sign", title: "Please SignUp" },
             { link: "/login", title: "Have account ? Log!" },
+            { link: "/forgotpassword", title: "Forgot your password?" },
             { link: "/about", title: "About" },
           ].map((item) => (
             <MenuItem key={item.title} component={Link} to={item.link} onClick={handleMenuClose}>

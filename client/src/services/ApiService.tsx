@@ -106,6 +106,33 @@ export async function adminSetUser(data: User): Promise<User> {
   return res.json();
 }
 
+export async function resetPassword(password: string, token: string): Promise<User> {
+  const res = await fetch(`${usersUrl}resetpassword/${token}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${getToken()}`,
+    },
+    body: JSON.stringify({ password: password }),
+  });
+  return res.json();
+}
+
+// forgotPassword(email: User): Observable<User> {
+//   return this.POST<User>('api/users/forgotPassword', email);
+// }
+
+export async function forgotPassword(email: string): Promise<User> {
+  const res = await fetch(`${usersUrl}forgotPassword`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email: email }),
+  });
+  return res.json();
+}
+
 export async function adminDeleteUser(_id: User): Promise<User> {
   const res = await fetch(`${usersUrl}deleteUser/${_id}`, {
     method: "DELETE",

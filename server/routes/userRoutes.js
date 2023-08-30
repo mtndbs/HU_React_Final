@@ -9,8 +9,8 @@ router.post('/login', authController.logIn); //http://localhost:7800/api/users/l
 router.get('/me', authController.protector, userController.getUser); // http://localhost:7800/api/users/me
 router.patch('/updateMe', authController.protector, userController.updateUser);
 
-router.post('/updatePassword', authController.protector, authController.updatePassword);
 router.post('/forgotPassword', authController.forgotPassword);
+router.post('/updatePassword', authController.protector, authController.updatePassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
 router.get(

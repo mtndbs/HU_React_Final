@@ -17,3 +17,31 @@ export const titleCase = (title: string) => {
       .join(" ");
   }
 };
+
+const inputProgressMsg = (total: number, current: number): string => {
+  console.log(total);
+  console.log(current);
+
+  if (current + 1 === total) {
+    return "Here we go!";
+  }
+  if (current > total / 2) {
+    return `You're verry close to end!`;
+  } else {
+    return "Minute and you're logged!";
+  }
+};
+
+export const inputProgress = (array: Array<any>): string => {
+  const valuedInputs = [];
+  array.forEach((item) => {
+    if (item.length > 2) {
+      valuedInputs.push(item);
+    }
+  });
+  let current = valuedInputs.length;
+  let total = array.length;
+
+  console.log(inputProgressMsg(total, current));
+  return inputProgressMsg(total, current) as string;
+};

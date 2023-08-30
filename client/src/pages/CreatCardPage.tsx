@@ -24,6 +24,7 @@ function CreatCardPage() {
       setPhone(json && json.phone ? json.phone : "");
       setCity(json && json.city ? json.city : "");
       setStreet(json && json.street ? json.street : "");
+      setCountry(json && json.country ? json.country : "");
       setImage("");
       setZip(json && json.zip ? json.zip : "");
       setHouseNumber(json && json.houseNumber ? json.houseNumber : "");

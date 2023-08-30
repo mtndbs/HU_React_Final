@@ -1,0 +1,18 @@
+extends baseEmail
+
+block content
+  h1(style='font-size:50px , text-align:center,color:#d4af37') BuisCase
+  p Hi #{firstName},
+  p Welcome to BuisCase, we're glad to have you 🎉
+  p We're all a big familiy here, so make sure to upload your Buisness card information if you have one!
+  table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+    tbody
+      tr
+        td(align='left')
+          table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+            tbody
+              tr
+                td
+                  a(href=`${url}`, target='_blank') Upload your new BuisnessCard and enjoy much much clients!
+  p If you need any help with adding your buisness info, please don't hesitate to contact us!
+  p - BuisCase with You ! 

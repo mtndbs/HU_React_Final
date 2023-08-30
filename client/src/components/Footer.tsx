@@ -77,7 +77,7 @@ export default function LabelBottomNavigation() {
             icon={<InfoIcon />}
           />
 
-          {userData?.bizChecked || verifyUiAdmin(userData!) ? (
+          {userData && (
             <BottomNavigationAction
               label="Favorites"
               value="favorites"
@@ -86,8 +86,6 @@ export default function LabelBottomNavigation() {
               }}
               icon={<FavoriteIcon />}
             />
-          ) : (
-            <span></span>
           )}
           {userData?.bizChecked || verifyUiAdmin(userData!) ? (
             <BottomNavigationAction

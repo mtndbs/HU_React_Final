@@ -1,11 +1,12 @@
 // eslint-disable-next-line node/no-unsupported-features/node-builtins
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
-const _ = require('lodash');
+// const _ = require('lodash');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto'); // for more simple hashed token (reseting password)
 const User = require('./../models/userModel');
-const sendEmail = require('./../utils/email');
+const Email = require('./../utils/email');
+
 // Token sign function
 
 const oneDayCloseFunc = date => {
@@ -24,11 +25,7 @@ const signToken = (id, bizChecked) => {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
 };
-const cookieOptions = {
-  expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days
-  // secure: true,  //on development, secure will be false
-  httpOnly: true
-};
+
 // ============================== secuirity middleware ===================================
 exports.protector = async (req, res, next) => {
   try {
@@ -132,6 +129,8 @@ exports.signUp = async (req, res) => {
       });
     }
 
+    await new Email(newUser, 'http://localhost:3000/').sendWelcome();
+
     res.status(200).json({
       name: newUser.name,
       email: newUser.email,
@@ -201,7 +200,6 @@ exports.logIn = async (req, res) => {
       });
     }
 
-    res.cookie('jwt', token, cookieOptions);
     user.loginTrys = 0;
     user.save();
 
@@ -227,25 +225,17 @@ exports.logIn = async (req, res) => {
 exports.forgotPassword = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    res.status(404).json({ status: 'fail', message: 'there is no user with this email' });
+    return res
+      .status(404)
+      .json({ status: 'fail', message: 'there is no user with this email' });
   }
-  // 2) Generate the random reset token
-  const resetToken = user.createPasswordResetToken();
-
-  await user.save({ validateBeforeSave: false });
-
-  const resetURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/users/resetpassword/${resetToken}`;
-
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
-
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Your password reset token (valid for 10 min)',
-      message
-    });
+    const resetToken = user.createPasswordResetToken();
+
+    await user.save({ validateBeforeSave: false });
+    const LocalResetPageURL = `http://localhost:3000/reset-password/${resetToken}`;
+
+    await new Email(user, LocalResetPageURL).sendPasswordReset();
 
     res.status(200).json({
       status: 'success',
@@ -286,7 +276,13 @@ exports.resetPassword = async (req, res) => {
     const token = signToken(user._id, user.bizCheckedChecked);
     res.status(200).json({
       status: 'success',
-      data: token
+      name: user.name,
+      email: user.email,
+      bizChecked: user.bizChecked,
+      token: token,
+      favorites: user.favorites,
+      _id: user._id,
+      role: user.role
     });
   } catch (err) {
     res.status(400).json({
@@ -311,10 +307,9 @@ exports.updatePassword = async (req, res) => {
   await user.save();
 
   const token = signToken(user._id, user.bizChecked);
-  res.cookie('jwt', token, cookieOptions);
 
   res.status(201).json({
     status: 'success',
-    token: token
+    token
   });
 };

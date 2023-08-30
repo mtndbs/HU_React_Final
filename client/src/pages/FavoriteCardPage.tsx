@@ -9,6 +9,7 @@ import { SearchContext } from "../hooks/SearchContext";
 import { Bcard } from "../services/Interfaces";
 import { deleteCard, getUserFavoriteCard, toggleFavoriteCard } from "../services/ApiService";
 import PageCircle from "../components/general/PageCircle";
+import { toast } from "react-toastify";
 function FavoriteCardPage() {
   const [loading, setLoading] = React.useState(true);
   const [cards, setCards] = React.useState<Array<Bcard>>([]);
@@ -53,7 +54,11 @@ function FavoriteCardPage() {
     });
   };
   const onToggleFavorit = async (id: string) => {
-    toggleFavoriteCard(id).then((item) => console.log(item));
+    toggleFavoriteCard(id).then((item) => {
+      item.status
+        ? toast.success(`${item.title} Card added to favorite!`)
+        : toast.info(`${item.title} Card removed from favorite!`);
+    });
   };
 
   return (
