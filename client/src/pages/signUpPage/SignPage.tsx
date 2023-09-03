@@ -300,23 +300,7 @@ function SignPage() {
         <Box
           onKeyUp={() => validate()}
           onChange={() => {
-            setProgressTitle(
-              inputProgress([
-                name,
-                lastName,
-                password,
-                phone,
-                email,
-                street,
-                confirmPassword,
-                image,
-                country,
-                city,
-                houseNumber,
-                zip,
-                bizChecked,
-              ])
-            );
+            setProgressTitle(inputProgress([name, lastName, password, phone, email, street, confirmPassword, country, city]));
           }}
           component="form"
           sx={{ ...addSxStyle }}

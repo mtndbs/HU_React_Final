@@ -105,9 +105,9 @@ function BuisnessCard({
           borderTopRightRadius: "15px",
           boxShadow: " 0px 8px 16px 0px rgba(0,0,0,0.5)",
           "@media (max-width: 700px)": {
-            maxwidth: 250,
-            minwidth: 250,
-            minheight: 360,
+            maxwidth: 200,
+            minwidth: 200,
+            minheight: 320,
           },
         }}
         className="card-hover"

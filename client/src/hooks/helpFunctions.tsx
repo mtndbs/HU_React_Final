@@ -22,7 +22,7 @@ const inputProgressMsg = (total: number, current: number): string => {
   console.log(total);
   console.log(current);
 
-  if (current + 1 === total) {
+  if (current === total) {
     return "Here we go!";
   }
   if (current > total / 2) {
