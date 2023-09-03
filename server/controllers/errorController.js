@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable node/no-unsupported-features/es-builtins */
 const AppError = require('./../utils/appError');
 

@@ -6,7 +6,8 @@ const bcrypt = require('bcryptjs');
 const crypto = require('crypto'); // for more simple hashed token (reseting password)
 const User = require('./../models/userModel');
 const Email = require('./../utils/email');
-
+const AppError = require('./../utils/appError');
+const catchAsync = require('./../utils/catchAsync');
 // Token sign function
 
 const oneDayCloseFunc = date => {
@@ -41,9 +42,7 @@ exports.protector = async (req, res, next) => {
       });
     }
 
-    // verifiy token
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
-    // sending the user details inside the req object to the endpoint
     //check if user still exists
     const currentUser = await User.findById(decoded.id);
     // reseting the login blocked by protect middleware
@@ -82,143 +81,123 @@ exports.restrictTo = (...roles) => {
 
 // ================================= AuthGuard  ======================================
 
-exports.signUp = async (req, res) => {
-  try {
-    const {
-      name,
-      lastName,
-      password,
-      phone,
-      email,
-      street,
-      confirmPassword,
-      image,
-      country,
-      city,
-      houseNumber,
-      zip,
-      bizChecked
-    } = req.body;
+exports.signUp = catchAsync(async (req, res, next) => {
+  const {
+    name,
+    lastName,
+    password,
+    phone,
+    email,
+    street,
+    confirmPassword,
+    image,
+    country,
+    city,
+    houseNumber,
+    zip,
+    bizChecked
+  } = req.body;
 
-    const duplicateEmail = await User.findOne({ email: email });
-    if (duplicateEmail) {
-      return res
-        .status(409)
-        .json({ status: 'fail', message: 'This Email already exist' });
-    }
-    const newUser = await User.create({
-      name,
-      lastName,
-      password,
-      phone,
-      email,
-      street,
-      confirmPassword,
-      image,
-      country,
-      city,
-      houseNumber,
-      zip,
-      bizChecked
-    });
-
-    const token = signToken(newUser._id, newUser.bizChecked);
-    if (!token) {
-      return res.status(401).json({
-        status: 'There was problem with your authentication, please sign again'
-      });
-    }
-
-    await new Email(newUser, 'http://localhost:3000/').sendWelcome();
-
-    res.status(200).json({
-      name: newUser.name,
-      email: newUser.email,
-      bizChecked: newUser.bizChecked,
-      token: token,
-      favorites: newUser.favorites,
-      _id: newUser._id,
-      role: newUser.role
-    });
-  } catch (err) {
-    res.status(401).json({
-      status: 'fail',
-      message: err.message
-    });
+  const duplicateEmail = await User.findOne({ email: email });
+  if (duplicateEmail) {
+    return next(new AppError('This Email already exist', 409));
   }
-};
-exports.logIn = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!validator.isEmail(email) || !password) {
-      return res
-        .status(400)
-        .json({ status: 'fail', message: 'Email or password not currectly typed' });
-    }
-    const user = await User.findOne({ email }).select('+password'); // +password because password set to select false
-    if (!user || user.active === false) {
-      return res
-        .status(400)
-        .json({ status: 'fail', message: 'email or passwrod are invalid' });
-    }
+  const newUser = await User.create({
+    name,
+    lastName,
+    password,
+    phone,
+    email,
+    street,
+    confirmPassword,
+    image,
+    country,
+    city,
+    houseNumber,
+    zip,
+    bizChecked
+  });
 
-    if (oneDayCloseFunc(user.userBlockedAt)) {
-      user.userBlocked = false;
+  const token = signToken(newUser._id, newUser.bizChecked);
+  if (!token) {
+    return next(
+      new AppError('There was problem with your authentication, please sign again', 401)
+    );
+  }
+
+  await new Email(newUser, 'http://localhost:3000/').sendWelcome();
+
+  res.status(200).json({
+    name: newUser.name,
+    email: newUser.email,
+    bizChecked: newUser.bizChecked,
+    token: token,
+    favorites: newUser.favorites,
+    _id: newUser._id,
+    role: newUser.role
+  });
+});
+exports.logIn = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
+  if (!validator.isEmail(email) || !password) {
+    return next(new AppError('Email or password not currectly typed', 400));
+  }
+  const user = await User.findOne({ email }).select('+password'); // +password because password set to select false
+  if (!user || user.active === false) {
+    return next(new AppError('email or passwrod are invalid', 400));
+  }
+
+  if (oneDayCloseFunc(user.userBlockedAt)) {
+    user.userBlocked = false;
+  }
+
+  if (user.userBlocked) {
+    return next(
+      new AppError('To many failed login requests , User blocked for 24 Hours', 400)
+    );
+  }
+
+  if (!(await bcrypt.compare(password, user.password))) {
+    if (user.loginTrys < 3) {
+      user.loginTrys += 1;
     }
-
-    if (user.userBlocked) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'To many failed login requests , User blocked for 24 Hours'
-      });
+    if (user.loginTrys >= 3) {
+      user.userBlocked = true;
+      user.userBlockedAt = Date.now();
+      user.loginTrys = 0;
     }
-
-    if (!(await bcrypt.compare(password, user.password))) {
-      if (user.loginTrys < 3) {
-        user.loginTrys += 1;
-      }
-      if (user.loginTrys >= 3) {
-        user.userBlocked = true;
-        user.userBlockedAt = Date.now();
-        user.loginTrys = 0;
-      }
-      const loginAttemps = 3 - user.loginTrys;
-      user.save();
-
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Email or passwrod are invalid',
-        trys: user.loginTrys,
-        tryMessage: `Wrong username and password, you only have ${loginAttemps} more login attempts left`
-      });
-    }
-
-    const token = signToken(user._id, user.bizChecked);
-    if (!token) {
-      return res.status(401).json({
-        status: 'There was problem with your authentication, please sign again'
-      });
-    }
-
-    user.loginTrys = 0;
+    const loginAttemps = 3 - user.loginTrys;
     user.save();
 
-    res.status(200).json({
-      name: user.name,
-      email: user.email,
-      bizChecked: user.bizChecked,
-      token: token,
-      favorites: user.favorites,
-      _id: user._id,
-      role: user.role
-    });
-  } catch (err) {
-    res.status(500).json({
+    return res.status(400).json({
       status: 'fail',
-      message: err.message
+      message: 'Email or passwrod are invalid',
+      trys: user.loginTrys,
+      tryMessage: `Wrong username and password, you only have ${loginAttemps} more login attempts left`
     });
   }
-};
+
+  const token = signToken(user._id, user.bizChecked);
+  if (!token) {
+    return new AppError(
+      'There was problem with your authentication, please sign again',
+      401
+    );
+  }
+
+  user.loginTrys = 0;
+  user.save();
+
+  res.status(200).json({
+    name: user.name,
+    email: user.email,
+    bizChecked: user.bizChecked,
+    token: token,
+    favorites: user.favorites,
+    _id: user._id,
+    role: user.role
+  });
+});
 
 //==========================Reseting password ====================== not required
 
@@ -252,54 +231,45 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-exports.resetPassword = async (req, res) => {
-  try {
-    const hashedToken = crypto
-      .createHash('sha256')
-      .update(req.params.token)
-      .digest('hex');
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(req.params.token)
+    .digest('hex');
 
-    const user = await User.findOne({
-      passwordResetToken: hashedToken,
-      passwordResetExpires: { $gt: Date.now() }
-    });
-    if (!user) {
-      return res
-        .status(400)
-        .json({ status: 'fail', message: 'Token is invalid or has expired' });
-    }
-    user.password = req.body.password;
-    user.confirmPassword = req.body.confirmPassword;
-    user.passwordResetToken = undefined;
-    user.passwordResetExpires = undefined;
-    await user.save();
-    const token = signToken(user._id, user.bizCheckedChecked);
-    res.status(200).json({
-      status: 'success',
-      name: user.name,
-      email: user.email,
-      bizChecked: user.bizChecked,
-      token: token,
-      favorites: user.favorites,
-      _id: user._id,
-      role: user.role
-    });
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message
-    });
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() }
+  });
+  if (!user) {
+    return new AppError('Token is invalid or has expired', 401);
   }
-};
+  user.password = req.body.password;
+  user.confirmPassword = req.body.confirmPassword;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+  const token = signToken(user._id, user.bizCheckedChecked);
+  res.status(200).json({
+    status: 'success',
+    name: user.name,
+    email: user.email,
+    bizChecked: user.bizChecked,
+    token: token,
+    favorites: user.favorites,
+    _id: user._id,
+    role: user.role
+  });
+});
 
-exports.updatePassword = async (req, res) => {
+exports.updatePassword = catchAsync(async (req, res, next) => {
   const { password, confirmPassword, currentPassword } = req.body;
   if (!password || !confirmPassword || !currentPassword) {
-    return res.status(404).json({ status: 'missing one of the values' });
+    return new AppError('missing one of the values', 404);
   }
   const user = await User.findById(req.user.id).select('+password');
   if (!user || !(await bcrypt.compare(currentPassword, user.password))) {
-    return res.status(400).json({ status: 'email or passwrod are invalid' });
+    return new AppError('email or passwrod are invalid', 400);
   }
   user.password = password;
   user.confirmPassword = confirmPassword;
@@ -312,4 +282,4 @@ exports.updatePassword = async (req, res) => {
     status: 'success',
     token
   });
-};
+});

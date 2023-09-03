@@ -5,10 +5,10 @@ import { Container, Typography } from "@mui/material";
 import Title from "../components/general/Title";
 import { toast } from "react-toastify";
 import * as EmailValidator from "email-validator";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Circle from "../components/general/Circle";
 import AuthButton from "../components/general/authButton";
-import { forgotPassword, login } from "../services/ApiService";
+import { forgotPassword } from "../services/ApiService";
 import PageCircle from "../components/general/PageCircle";
 import AppTitle from "../components/AppTitle";
 
@@ -18,7 +18,6 @@ function ForgotPasswordPage() {
   const [msg, setMsg] = React.useState("");
 
   const [loadCircle, setLoadCircle] = React.useState(false);
-  const navigate = useNavigate();
 
   // email useStates
 
@@ -118,7 +117,7 @@ function ForgotPasswordPage() {
           }}
         >
           <Box textAlign={"center"}>
-            <AppTitle />
+            <AppTitle size={"50px"} />
           </Box>
           <Title mainText={"Forgot password"} subText="Please provide your email for password reset" />
 

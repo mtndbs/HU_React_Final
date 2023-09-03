@@ -119,19 +119,15 @@ exports.setFavorite = catchAsync(async (req, res, next) => {
   const cardIndex = card.favorites.indexOf(userId);
   const userIndex = user.favorites.indexOf(cardId);
   if (cardIndex === -1) {
-    // User has not favorited the card, add to favorites
     card.favorites.push(userId);
     status = true;
   } else {
-    // User has already favorited the card, remove from favorites
     card.favorites.splice(cardIndex, 1);
     status = false;
   }
   if (userIndex === -1) {
-    // User has not favorited the card, add to favorites
     user.favorites.push(cardId);
   } else {
-    // User has already favorited the card, remove from favorites
     user.favorites.splice(userIndex, 1);
   }
 
