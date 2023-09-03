@@ -24,6 +24,7 @@ function CreatCardPage() {
       setPhone(json && json.phone ? json.phone : "");
       setCity(json && json.city ? json.city : "");
       setStreet(json && json.street ? json.street : "");
+      setCountry(json && json.country ? json.country : "");
       setImage("");
       setZip(json && json.zip ? json.zip : "");
       setHouseNumber(json && json.houseNumber ? json.houseNumber : "");
@@ -322,10 +323,11 @@ function CreatCardPage() {
 
           <Autocomplete
             disablePortal
+            freeSolo
             value={countrySelect}
             options={countryList}
             inputValue={country}
-            onInputChange={(event, newInputValue) => {
+            onInputChange={(_, newInputValue) => {
               setCountry(newInputValue);
             }}
             sx={{ width: 620 }}

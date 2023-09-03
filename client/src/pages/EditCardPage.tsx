@@ -98,6 +98,7 @@ function EditCardPage() {
       setweb(response && response.web ? response.web : "");
       setPhone(response && response.phone ? response.phone : "");
       setCity(response && response.city ? response.city : "");
+      setCountry(response && response.country ? response.country : "");
       setStreet(response && response.street ? response.street : "");
       setImage(response && response.image ? response.image : "");
       setZip(response && response.zip ? response.zip : "");
@@ -346,7 +347,8 @@ function EditCardPage() {
               value={countrySelect}
               options={countryList}
               inputValue={country}
-              onInputChange={(event, newInputValue) => {
+              freeSolo
+              onInputChange={(_, newInputValue) => {
                 setCountry(newInputValue);
               }}
               sx={{ width: 620 }}

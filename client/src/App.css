@@ -26,9 +26,47 @@
 }
 
 /* =================================  ViewCard Page  ==================================================== */
-/* * {
-  border: solid black 1px;
-} */
+
+* {
+  /* border: solid black 1px; */
+}
+
+.main-wrap {
+  display: flex;
+  margin: 5px;
+  max-height: 150px;
+  flex-direction: row;
+  border-radius: 5px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.p-wrap {
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.left-wrap {
+  width: 78%;
+  margin-right: 2%;
+}
+.text-wrap {
+  height: 80%;
+}
+.icon-wrap {
+  display: flex;
+  flex-direction: row;
+  /* height: 21%; */
+}
+.pic {
+  width: 150px;
+  height: 150px;
+}
+
+.proj-image {
+  max-width: 100%;
+  max-height: 100%;
+}
 
 .left-box {
   margin-right: 30px;

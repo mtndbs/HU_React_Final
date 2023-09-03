@@ -1,7 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { Autocomplete, Button, Checkbox, Container, FormControlLabel } from "@mui/material";
+import { Autocomplete, Button, Checkbox, Container, FormControlLabel, Typography } from "@mui/material";
 import Title from "../../components/general/Title";
 import { toast } from "react-toastify";
 import * as EmailValidator from "email-validator";
@@ -13,13 +13,18 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 // import "../signUpPage/signUp.css";
 import "../../App.css";
 
-import { isValidIsraeliPhoneNumber, isValidPassword } from "../../hooks/helpFunctions";
+import { inputProgress, isValidIsraeliPhoneNumber, isValidPassword } from "../../hooks/helpFunctions";
 import { countryList } from "./allCountries";
 import { signup } from "../../services/ApiService";
 import PageCircle from "../../components/general/PageCircle";
+import { setToken, setUser } from "../../auth/TokenManager";
+import { UserContext } from "../../hooks/UserContext";
 function SignPage() {
   // generic
   const [loading, setLoading] = React.useState(true);
+  const [loginMsg, setloginMsg] = React.useState("");
+  const [progressTitle, setProgressTitle] = React.useState("");
+  const { setUserData } = React.useContext(UserContext);
 
   const [loadCircle, setLoadCircle] = React.useState(false);
   const addSxStyle = sxStyles();
@@ -244,6 +249,7 @@ function SignPage() {
       validateButtonCheck();
       return;
     }
+    setLoadCircle(true);
 
     signup({
       name,
@@ -261,11 +267,19 @@ function SignPage() {
       bizChecked,
     })
       .then((user) => {
-        console.log(user);
-        setLoadCircle(true);
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
+        if (user && user.status === "fail") {
+          toast.error(user.message);
+          setLoadCircle(false);
+        } else {
+          setToken(user.token);
+          setUser(user);
+          setUserData(user);
+          setloginMsg(`Welcome ${user.name} ${user.lastName || ""}!, logging in...`);
+          setTimeout(() => {
+            navigate("/");
+            setLoadCircle(false);
+          }, 2000);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -283,8 +297,32 @@ function SignPage() {
       {loading ? (
         <PageCircle />
       ) : (
-        <Box onKeyUp={() => validate()} component="form" sx={{ ...addSxStyle }}>
+        <Box
+          onKeyUp={() => validate()}
+          onChange={() => {
+            setProgressTitle(
+              inputProgress([
+                name,
+                lastName,
+                password,
+                phone,
+                email,
+                street,
+                confirmPassword,
+                image,
+                country,
+                city,
+                houseNumber,
+                zip,
+                bizChecked,
+              ])
+            );
+          }}
+          component="form"
+          sx={{ ...addSxStyle }}
+        >
           <Title mainText={"Sign up"} subText="Plase sign up" />
+          <p style={{ textAlign: "center", color: progressTitle.startsWith("Minute") ? "orange" : "green" }}>{progressTitle}</p>
           <Box display={"flex"} className="myBox">
             <TextField
               className="sign-field"
@@ -334,6 +372,7 @@ function SignPage() {
               className="sign-field"
               label={passwordLabel}
               variant="outlined"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={fieldPasswordErr}
@@ -344,6 +383,7 @@ function SignPage() {
               className="sign-field"
               label={confirmPasswordLabel}
               variant="outlined"
+              type="password"
               value={confirmPassword}
               onChange={(e) => setconfirmPassword(e.target.value)}
               error={fieldconfirmPasswordErr}
@@ -363,7 +403,8 @@ function SignPage() {
               disablePortal
               options={countryList}
               inputValue={country}
-              onInputChange={(event, newInputValue) => {
+              freeSolo
+              onInputChange={(_, newInputValue) => {
                 setCountry(newInputValue);
               }}
               sx={{ width: 620 }}
@@ -425,6 +466,7 @@ function SignPage() {
             <Button
               onClick={() => {
                 clearAllFieldsFunc();
+                setProgressTitle("");
               }}
               sx={{ width: "50%" }}
             >
@@ -432,6 +474,9 @@ function SignPage() {
             </Button>
           </Box>
           <AuthButton handleClick={() => handleClick}>Submit {loadCircle && <Circle _size={30} />} </AuthButton>
+          <Typography variant="h6" color="green" height={"20px"} textAlign={"center"}>
+            {loginMsg}
+          </Typography>
         </Box>
       )}
     </Container>

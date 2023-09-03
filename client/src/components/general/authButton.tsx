@@ -3,12 +3,21 @@ import { ReactNode } from "react";
 interface Props {
   children: ReactNode;
   handleClick: Function;
+  margin?: number;
 }
-function AuthButton({ children, handleClick }: Props) {
+function AuthButton({ children, handleClick, margin = 2 }: Props) {
   return (
     <>
       <Button
-        sx={{ height: "45px", borderRadius: "14px", color: "white", backgroundColor: "primary" }}
+        sx={{
+          height: "45px",
+          width: "100%",
+          margin: margin,
+          marginTop: "5px",
+          borderRadius: "14px",
+          color: "white",
+          backgroundColor: "primary",
+        }}
         variant="contained"
         onClick={handleClick()}
       >

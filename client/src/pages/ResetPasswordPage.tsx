@@ -1,3 +1,9 @@
+// function ResetPasswordPage() {
+//     return (  );
+// }
+
+// export default ResetPasswordPage;
+
 import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
@@ -13,21 +19,22 @@ import {
 } from "@mui/material";
 import Title from "../components/general/Title";
 import { toast } from "react-toastify";
-import * as EmailValidator from "email-validator";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Circle from "../components/general/Circle";
 import AuthButton from "../components/general/authButton";
-import { login } from "../services/ApiService";
+import { login, resetPassword } from "../services/ApiService";
 import { setToken, setUser } from "../auth/TokenManager";
 import { UserContext } from "../hooks/UserContext";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { VisibilityOff, Visibility, Margin } from "@mui/icons-material";
 import PageCircle from "../components/general/PageCircle";
 import AppTitle from "../components/AppTitle";
+import { isValidPassword } from "../hooks/helpFunctions";
 
-function LoginPage() {
+function ResetPasswordPage() {
   // generic
   const [loading, setLoading] = React.useState(true);
-  const [loginMsg, setloginMsg] = React.useState("");
+  const [msg, setMsg] = React.useState("");
+  const { token } = useParams();
 
   const { setUserData } = React.useContext(UserContext);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -39,13 +46,6 @@ function LoginPage() {
   const [loadCircle, setLoadCircle] = React.useState(false);
   const navigate = useNavigate();
 
-  // email useStates
-
-  const [email, setEmail] = React.useState("");
-  const [emailLabel, seteMailLabel] = React.useState("Email");
-  const [emailErr, setEmailErr] = React.useState("");
-  const [fieldEmailErr, setfieldEmailErr] = React.useState(false);
-
   // password useStates
 
   const [password, setPassword] = React.useState("");
@@ -53,6 +53,11 @@ function LoginPage() {
   const [passwordErr, setPasswordErr] = React.useState("");
   const [fieldPasswordErr, setfieldPasswordErr] = React.useState(false);
 
+  // confirm password useState
+  const [confirmPassword, setconfirmPassword] = React.useState("");
+  const [confirmPasswordLabel, setConfirmPasswordLabel] = React.useState("Confirm password *");
+  const [confirmPasswordErr, setConfirmPasswordErr] = React.useState("");
+  const [fieldconfirmPasswordErr, setfieldConfirmPasswordErr] = React.useState(false);
   // useEffect
 
   React.useEffect(() => {
@@ -62,90 +67,71 @@ function LoginPage() {
     return () => clearTimeout(timer);
   }, []);
 
-  const setEmailCorrect = (bool: boolean) => {
-    if (bool) {
-      setEmailErr("");
-      setfieldEmailErr(false);
-      seteMailLabel("Email");
-    } else {
-      seteMailLabel("Error");
-      setEmailErr("Email is not Valid");
-      setfieldEmailErr(true);
-    }
-  };
-
-  const setPasswordCorrect = (bool: boolean) => {
-    setPasswordErr(bool ? "" : "Password is not valid");
+  const setPasswordCorrect = (bool: boolean, msg: string = "") => {
+    setPasswordErr(bool ? "" : msg);
     setfieldPasswordErr(bool ? false : true);
     setPasswordLabel(bool ? "Password*" : "Error");
   };
-
-  const validateButtonCheck = () => {
-    EmailValidator.validate(email) ? setEmailCorrect(true) : setEmailCorrect(false);
+  const setConfirmPasswordCorrect = (bool: boolean) => {
+    setConfirmPasswordLabel(bool ? "Confirm password*" : "");
+    setConfirmPasswordErr(bool ? "" : "The password are not the same!");
+    setfieldConfirmPasswordErr(bool ? false : true);
   };
 
   const validate = (): boolean => {
     if (password.length < 1) {
       setPasswordCorrect(true);
     }
-
-    if (email.length < 1) {
-      setEmailCorrect(true);
-      return false;
+    if (confirmPassword.length < 1) {
+      setPasswordCorrect(true);
     }
 
-    if (!EmailValidator.validate(email)) {
-      setEmailCorrect(false);
+    !isValidPassword(password) || password.length < 6
+      ? setPasswordCorrect(false, "Password must be atleat 6 chars, password must contain !@%$#^&*-_* and one Capital letter")
+      : setPasswordCorrect(true);
+    // password !== confirmPassword ? setConfirmPasswordCorrect(false) : setConfirmPasswordCorrect(true);
+
+    if (!password || password.length < 2) {
+      setPasswordCorrect(false);
       return false;
     }
-    setEmailCorrect(true);
+    if (password !== confirmPassword) {
+      setConfirmPasswordCorrect(false);
+      return false;
+    }
 
     return true;
   };
 
   const handleClick = () => {
     setLoadCircle(true);
+
     if (!validate()) {
       toast.error("Please enter the details correctly ");
-      validateButtonCheck();
       setLoadCircle(false);
       return;
     }
-    login({ email, password })
-      .then((json) => {
-        if (json && json.status === "fail") {
-          console.log(json);
-          setLoadCircle(false);
-          setPasswordCorrect(false);
-          setEmailCorrect(false);
-          if (json && json.trys) {
-            toast.error(json.tryMessage, { hideProgressBar: true, autoClose: false });
-          } else {
-            toast.error(json.message, { hideProgressBar: true });
-          }
 
-          return;
-        }
-        if (json.token) {
+    resetPassword(password, token ? token : "")
+      .then((json) => {
+        console.log(json);
+        if (json && json.status === "fail") {
+          toast.error(json.message);
+        } else {
+          setMsg("New password updated!...Loggin...");
           setToken(json.token);
           setUser(json);
+
           setUserData(json);
-          setloginMsg(`Welcome back ${json.name} ${json.lastName || ""} ! , logging in...`);
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
         }
-        setLoadCircle(true);
-        setTimeout(() => {
-          navigate("/");
-        }, 2000);
       })
-      .catch((error) => {
-        console.log(error);
-        toast.error(error.message, { autoClose: false });
-        setPasswordCorrect(false);
-        setEmailCorrect(false);
+      .finally(() => {
         setLoadCircle(false);
       });
   };
-
   return (
     <Container
       sx={{
@@ -158,7 +144,7 @@ function LoginPage() {
       ) : (
         <Box
           component="form"
-          onKeyUp={() => validate()}
+          // onKeyUp={() => validate()}
           autoComplete="off"
           m={1}
           sx={{
@@ -173,23 +159,11 @@ function LoginPage() {
           }}
         >
           <Box textAlign={"center"}>
-            <AppTitle />
+            <AppTitle size={"60px"} />
           </Box>
-          <Title mainText={"Login"} subText="please login" />
+          <Title mainText={"Reset Password"} subText="Please Provide new password" />
 
-          <TextField
-            sx={{ m: 2 }}
-            autoFocus={true}
-            id="outlined-basic"
-            label={emailLabel}
-            variant="outlined"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            error={fieldEmailErr}
-            helperText={emailErr}
-          />
-
-          <FormControl sx={{ m: 2, width: "100%" }} variant="outlined">
+          <FormControl sx={{ width: "100%", margin: "2px", marginBottom: 2 }} variant="outlined">
             <InputLabel htmlFor="outlined-adornment-password">{passwordLabel}</InputLabel>
             <OutlinedInput
               onChange={(e) => setPassword(e.target.value)}
@@ -213,13 +187,26 @@ function LoginPage() {
             />
             <FormHelperText sx={{ color: "#d32f2f" }}>{passwordErr}</FormHelperText>
           </FormControl>
+          <TextField
+            sx={{ width: "100%", marginBottom: "10px" }}
+            className="sign-field"
+            label={confirmPasswordLabel}
+            variant="outlined"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setconfirmPassword(e.target.value)}
+            error={fieldconfirmPasswordErr}
+            helperText={confirmPasswordErr}
+          />
 
-          <AuthButton handleClick={() => handleClick}>Submit {loadCircle && <Circle _size={30} />}</AuthButton>
-          <Typography align="center">
-            Forgot password ? <Link to={"/forgotpassword"}>Reset password</Link>{" "}
+          <AuthButton margin={0} handleClick={() => handleClick}>
+            Submit {loadCircle && <Circle _size={30} />}
+          </AuthButton>
+          <Typography variant="h6" color="green" minHeight={"20px"} textAlign={"center"}>
+            {msg}
           </Typography>
-          <Typography variant="h6" color="green" height={"20px"} textAlign={"center"}>
-            {loginMsg}
+          <Typography align="center" sx={{ margin: 1 }}>
+            Back to <Link to={"/"}>Home</Link>
           </Typography>
         </Box>
       )}
@@ -227,4 +214,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default ResetPasswordPage;

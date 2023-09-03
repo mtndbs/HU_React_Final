@@ -9,7 +9,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import DeleteIcon from "@mui/icons-material/Delete";
-import PreviewIcon from "@mui/icons-material/Preview";
 import CallIcon from "@mui/icons-material/Call";
 
 import { Bcard } from "../../services/Interfaces";
@@ -146,7 +145,7 @@ function BuisnessCard({
           </Typography>
         </CardContent>
 
-        {!favoritePage && (
+        {!favoritePage ? (
           <CardActions disableSpacing>
             {verifyToken() && (
               <IconButton
@@ -182,14 +181,7 @@ function BuisnessCard({
             )}
 
             <Box>
-              <IconButton
-                onClick={() => {
-                  navigate(`view-card/${_id}`);
-                }}
-              >
-                <PreviewIcon />
-              </IconButton>
-              {verifyUiAdmin(userData!) && (
+              {verifyUiAdmin(userData!) || ifCardBelongToThisUserFunc(userData?._id) ? (
                 <IconButton
                   onClick={() => {
                     handleClickOpen();
@@ -198,8 +190,25 @@ function BuisnessCard({
                 >
                   <DeleteIcon />
                 </IconButton>
+              ) : (
+                <span></span>
               )}
             </Box>
+          </CardActions>
+        ) : (
+          <CardActions disableSpacing>
+            {verifyToken() && (
+              <IconButton
+                aria-label="add to favorites"
+                onClick={() => {
+                  onToggleFavorit(_id);
+                  toggleHighlight();
+                  // toast.info(`${title} favorite status changed`);
+                }}
+              >
+                <FavoriteIcon sx={{ color: isRedHeart ? "red" : "" }} />
+              </IconButton>
+            )}
           </CardActions>
         )}
       </Card>

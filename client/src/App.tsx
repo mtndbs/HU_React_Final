@@ -24,6 +24,8 @@ import AppThemeProvider from "./plugins/mui";
 import ProfilePage from "./pages/ProfilePage";
 import EditProfilePage from "./pages/signUpPage/EditProfilePage";
 import SandBox from "./pages/SandBox";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 function App() {
   const [mode, setMode] = React.useState<"light" | "dark">("light");
@@ -46,6 +48,8 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/sign" element={<SignPage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
               <Route path="/view-card/:id" element={<ViewCardPage />} />
 
               <Route
