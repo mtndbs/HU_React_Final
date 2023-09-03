@@ -8,6 +8,8 @@ This is a dynamic application for advertising businesses that provides full CRUD
 
 - Create, read, update, and delete (CRUD) operations for managing advertisements
 - RESTful API for accessing and manipulating advertisement data
+- Reset password by designed email authentication, with time validate
+- Auto login after signUp
 - User-friendly interface with a modern and responsive design by MUI componenets
 - Integration with MongoDB for data storage
 - Multy-users Favorite and my cards abilities
