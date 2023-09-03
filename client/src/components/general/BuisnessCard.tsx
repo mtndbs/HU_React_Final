@@ -167,30 +167,32 @@ function BuisnessCard({
             >
               <CallIcon />
             </IconButton>
-            {verifyUiAdmin(userData!) ||
-              (ifCardBelongToThisUserFunc(userData?._id) && (
-                <IconButton
-                  aria-label="edit"
-                  onClick={() => {
-                    navigate(!rootLink ? `edit-card/${_id}` : `/edit-card/${_id}`);
-                  }}
-                >
-                  <ModeEditIcon />
-                </IconButton>
-              ))}
+            {verifyUiAdmin(userData!) || ifCardBelongToThisUserFunc(userData?._id) ? (
+              <IconButton
+                aria-label="edit"
+                onClick={() => {
+                  navigate(!rootLink ? `edit-card/${_id}` : `/edit-card/${_id}`);
+                }}
+              >
+                <ModeEditIcon />
+              </IconButton>
+            ) : (
+              <span></span>
+            )}
 
             <Box>
-              {verifyUiAdmin(userData!) ||
-                (ifCardBelongToThisUserFunc(userData?._id) && (
-                  <IconButton
-                    onClick={() => {
-                      handleClickOpen();
-                    }}
-                    aria-label="delete"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                ))}
+              {verifyUiAdmin(userData!) || ifCardBelongToThisUserFunc(userData?._id) ? (
+                <IconButton
+                  onClick={() => {
+                    handleClickOpen();
+                  }}
+                  aria-label="delete"
+                >
+                  <DeleteIcon />
+                </IconButton>
+              ) : (
+                <span></span>
+              )}
             </Box>
           </CardActions>
         ) : (

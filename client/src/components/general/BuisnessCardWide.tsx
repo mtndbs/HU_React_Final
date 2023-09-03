@@ -91,7 +91,7 @@ function BuisnessCardWide({
   return (
     <>
       <div>
-        <div className="main-wrap" style={{ width: mdAndUp ? "70vw" : "80vw", border: "solid black 2px" }}>
+        <div className="main-wrap" style={{ width: mdAndUp ? "70vw" : "80vw" }}>
           <div className="pic">
             <img
               className="pic"
@@ -101,13 +101,24 @@ function BuisnessCardWide({
                   : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
               }
               alt="project"
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                navigate(!rootLink ? `view-card/${_id}` : `/view-card/${_id}`);
+              }}
               // className="proj-image"
             ></img>
           </div>
           <div className="left-wrap">
             <div className="text-wrap">
-              <h3>{title}</h3>
-              <p className="p-wrap">{subTitle}</p>
+              <div
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  navigate(!rootLink ? `view-card/${_id}` : `/view-card/${_id}`);
+                }}
+              >
+                <h3>{title}</h3>
+                <p className="p-wrap">{subTitle}</p>
+              </div>
               <div className="icon-wrap">
                 {verifyToken() && (
                   <IconButton
@@ -129,30 +140,32 @@ function BuisnessCardWide({
                 >
                   <CallIcon />
                 </IconButton>
-                {verifyUiAdmin(userData!) ||
-                  (ifCardBelongToThisUserFunc(userData?._id) && (
-                    <IconButton
-                      aria-label="edit"
-                      onClick={() => {
-                        navigate(!rootLink ? `edit-card/${_id}` : `/edit-card/${_id}`);
-                      }}
-                    >
-                      <ModeEditIcon />
-                    </IconButton>
-                  ))}
+                {verifyUiAdmin(userData!) || ifCardBelongToThisUserFunc(userData?._id) ? (
+                  <IconButton
+                    aria-label="edit"
+                    onClick={() => {
+                      navigate(!rootLink ? `edit-card/${_id}` : `/edit-card/${_id}`);
+                    }}
+                  >
+                    <ModeEditIcon />
+                  </IconButton>
+                ) : (
+                  <span></span>
+                )}
 
                 <Box>
-                  {verifyUiAdmin(userData!) ||
-                    (ifCardBelongToThisUserFunc(userData?._id) && (
-                      <IconButton
-                        onClick={() => {
-                          handleClickOpen();
-                        }}
-                        aria-label="delete"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    ))}
+                  {verifyUiAdmin(userData!) || ifCardBelongToThisUserFunc(userData?._id) ? (
+                    <IconButton
+                      onClick={() => {
+                        handleClickOpen();
+                      }}
+                      aria-label="delete"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  ) : (
+                    <span></span>
+                  )}
                 </Box>
               </div>
             </div>

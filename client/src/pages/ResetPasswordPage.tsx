@@ -25,7 +25,7 @@ import AuthButton from "../components/general/authButton";
 import { login, resetPassword } from "../services/ApiService";
 import { setToken, setUser } from "../auth/TokenManager";
 import { UserContext } from "../hooks/UserContext";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
+import { VisibilityOff, Visibility, Margin } from "@mui/icons-material";
 import PageCircle from "../components/general/PageCircle";
 import AppTitle from "../components/AppTitle";
 import { isValidPassword } from "../hooks/helpFunctions";
@@ -159,7 +159,7 @@ function ResetPasswordPage() {
           }}
         >
           <Box textAlign={"center"}>
-            <AppTitle />
+            <AppTitle size={"60px"} />
           </Box>
           <Title mainText={"Reset Password"} subText="Please Provide new password" />
 
@@ -202,10 +202,10 @@ function ResetPasswordPage() {
           <AuthButton margin={0} handleClick={() => handleClick}>
             Submit {loadCircle && <Circle _size={30} />}
           </AuthButton>
-          <Typography variant="h6" color="green" height={"20px"} textAlign={"center"}>
+          <Typography variant="h6" color="green" minHeight={"20px"} textAlign={"center"}>
             {msg}
           </Typography>
-          <Typography align="center">
+          <Typography align="center" sx={{ margin: 1 }}>
             Back to <Link to={"/"}>Home</Link>
           </Typography>
         </Box>

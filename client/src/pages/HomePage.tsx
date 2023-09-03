@@ -19,7 +19,7 @@ function HomePage() {
   const [cards, setCards] = React.useState<Array<Bcard>>([]);
   const { searchValue } = React.useContext(SearchContext);
   const [filteredData, setFilteredData] = React.useState<Array<Bcard>>([]);
-  const [grid, setGrid] = React.useState(false);
+  const [grid, setGrid] = React.useState(true);
 
   const { userData } = React.useContext(UserContext);
 
@@ -84,15 +84,15 @@ function HomePage() {
     <>
       <Box>
         <ButtonGroup disableElevation variant="contained" aria-label="Disabled elevation buttons">
-          <Button onClick={() => handleDisplayChange("grid")} startIcon={<ViewModuleIcon />}>
+          <Button onClick={() => handleDisplayChange("grid")} color="secondary" startIcon={<ViewModuleIcon />}>
             Grid
           </Button>
-          <Button onClick={() => handleDisplayChange("list")} startIcon={<ViewListIcon />}>
+          <Button onClick={() => handleDisplayChange("list")} color="secondary" startIcon={<ViewListIcon />}>
             List
           </Button>
         </ButtonGroup>
       </Box>
-      <Title mainText="Welcome To BuisCase" subText="Choose your case with our top buisnesses" />
+      <Title mainText="Welcome To BuisCase " subText="Choose your case with our top buisnesses" />
 
       <Container>
         <Box sx={{ marginTop: "5vh" }}>
