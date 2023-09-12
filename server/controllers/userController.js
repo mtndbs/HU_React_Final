@@ -1,6 +1,30 @@
+const multer = require('multer');
 const User = require('./../models/userModel');
 const AppError = require('./../utils/appError');
 const catchAsync = require('./../utils/catchAsync');
+
+const { filterObj } = require('./../utils/helpFunc');
+
+const multerStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/img/users');
+  },
+  filename: (req, file, cb) => {
+    const ext = file.mimetype.split('/')[1];
+    cb(null, `user-${req.user._id}-${Date.now()}.${ext}`);
+  }
+});
+
+const multerFilter = (req, file, cb) => {
+  if (file.mimetype && file.mimetype.startsWith('image')) {
+    cb(null, true);
+  } else {
+    cb(new AppError('not an image Please upload only image', 400), 'false');
+  }
+};
+const upload = multer({ storage: multerStorage, fileFilter: multerFilter });
+
+exports.uploadUserPhoto = upload.single('photo');
 
 exports.getUser = catchAsync(async (req, res, next) => {
   //  Verifiy token
@@ -44,6 +68,11 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
+  console.log(req.file);
+  console.log('================');
+  console.log(req.body);
+
+  // const filterBody = filterObj();
   const {
     name,
     lastName,
@@ -57,6 +86,11 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     imageAlt
   } = req.body;
 
+  let photo;
+  if (req.file) {
+    photo = req.file.filename;
+  }
+
   const upDatedUser = await User.findByIdAndUpdate(
     req.user.id,
     {
@@ -69,9 +103,10 @@ exports.updateUser = catchAsync(async (req, res, next) => {
       houseNumber,
       zip,
       image,
-      imageAlt
+      imageAlt,
+      photo
     },
-    { new: true, runValidators: true }
+    { new: true, runValidators: false }
   );
   res.status(200).json({ status: 'success', data: upDatedUser });
 });

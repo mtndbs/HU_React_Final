@@ -92,6 +92,7 @@ const userSchema = new mongoose.Schema({
     default: Date.now(),
     select: false
   },
+  photo: String,
 
   active: {
     type: Boolean,
