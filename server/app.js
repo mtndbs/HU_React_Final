@@ -9,7 +9,7 @@ const xss = require('xss-clean');
 const morgan = require('morgan');
 const cors = require('cors');
 
-dotenv.config({ path: './config.env' });
+dotenv.config();
 const app = express();
 const port = process.env.PORT;
 
@@ -41,10 +41,6 @@ const cardRouter = require('./routes/bCardRoutes');
 
 mongoose
   .connect(process.env.MONGO_DB, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true,
     dbName: process.env.DBNAME
   })
   .then(() => {
